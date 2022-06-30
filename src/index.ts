@@ -2,6 +2,7 @@ import https from 'https'
 import http from 'http'
 import { load } from 'cheerio'
 import config, { News, Page } from './config'
+export { News, Page }
 
 export const locales = ['na', 'eu', 'fr', 'de', 'jp'] as const
 export type Locale = typeof locales[number]
