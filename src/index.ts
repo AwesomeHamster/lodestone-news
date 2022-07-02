@@ -14,10 +14,30 @@ export interface Context {
   referer: string
 }
 
-async function getLodestoneNews(
-  region: Region = 'jp',
-  category: string = 'topics',
-  page: number = 1,
+export async function getLodestoneNews(meta: {
+  region: Region
+  category: string
+  count: number
+}): Promise<News[]> {
+  const { region = 'jp', category = 'topics', count = 5 } = meta
+  const ret = []
+  let curPage = 1
+  while (ret.length < count) {
+    const { news, page } = await getNewsPage(region, category, curPage)
+    ret.push(...news)
+    curPage = page.current + 1
+    if (curPage > page.total) {
+      break
+    }
+  }
+  return ret.slice(0, count)
+}
+export default getLodestoneNews
+
+export async function getNewsPage(
+  region: Region,
+  category: string,
+  page: number,
 ): Promise<{ news: News[]; page: Page }> {
   if (regions.includes(region) === false) {
     throw new Error(`Invalid locale: ${region}`)
@@ -41,7 +61,6 @@ async function getLodestoneNews(
   const items = rule.items(rootNode, $, ctx)
   return { news: items, page: pager }
 }
-export default getLodestoneNews
 
 async function getUrl(url: string) {
   return new Promise<string>((resolve, reject) => {
