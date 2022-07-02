@@ -1,8 +1,8 @@
 import { Cheerio, CheerioAPI, Element } from 'cheerio'
 import { Context } from '.'
-import { fixUrl } from './utils'
+import { makeUrl } from './utils'
 
-const locales = {
+const i18n = {
   pager: {
     na: /Page (?<current>\d+) of (?<total>\d+)/,
     eu: /Page (?<current>\d+) of (?<total>\d+)/,
@@ -24,7 +24,7 @@ const baseRule: Pick<Rule, 'rootNode' | 'page' | 'items'> = {
       .find('ul.btn__pager > li.btn__pager__current')
       .first()
       .text()
-    const m = locales.pager[context.locale].exec(pager)
+    const m = i18n.pager[context.locale].exec(pager)
     return {
       current: parseInt(m?.[1] ?? '0', 10),
       total: parseInt(m?.[2] ?? '0', 10),
@@ -48,7 +48,7 @@ const baseRule: Pick<Rule, 'rootNode' | 'page' | 'items'> = {
           title,
           epoch,
           date: new Date(epoch * 1000),
-          url: fixUrl(url, context.referer),
+          url: makeUrl(url, context.referer),
         }
       })
       .toArray()
@@ -83,7 +83,7 @@ const config: Config = {
               title,
               epoch,
               date: new Date(epoch * 1000),
-              url: fixUrl(url, context.referer),
+              url: makeUrl(url, context.referer),
             }
           })
           .toArray()

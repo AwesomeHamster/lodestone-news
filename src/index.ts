@@ -4,22 +4,22 @@ import { load } from 'cheerio'
 import config, { News, Page } from './config'
 export { News, Page }
 
-export const locales = ['na', 'eu', 'fr', 'de', 'jp'] as const
-export type Locale = typeof locales[number]
+export const regions = ['na', 'eu', 'fr', 'de', 'jp'] as const
+export type Region = typeof regions[number]
 
 export interface Context {
-  locale: Locale
+  locale: Region
   category: string
   page: number
   referer: string
 }
 
 async function getLodestoneNews(
-  locale: Locale = 'jp',
+  locale: Region = 'jp',
   category: string = 'topics',
   page: number = 1,
 ): Promise<{ news: News[]; page: Page }> {
-  if (locales.includes(locale) === false) {
+  if (regions.includes(locale) === false) {
     throw new Error(`Invalid locale: ${locale}`)
   }
   if (Object.prototype.hasOwnProperty.call(config.rules, category) === false) {
