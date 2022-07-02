@@ -8,19 +8,19 @@ export const regions = ['na', 'eu', 'fr', 'de', 'jp'] as const
 export type Region = typeof regions[number]
 
 export interface Context {
-  locale: Region
+  region: Region
   category: string
   page: number
   referer: string
 }
 
 async function getLodestoneNews(
-  locale: Region = 'jp',
+  region: Region = 'jp',
   category: string = 'topics',
   page: number = 1,
 ): Promise<{ news: News[]; page: Page }> {
-  if (regions.includes(locale) === false) {
-    throw new Error(`Invalid locale: ${locale}`)
+  if (regions.includes(region) === false) {
+    throw new Error(`Invalid locale: ${region}`)
   }
   if (Object.prototype.hasOwnProperty.call(config.rules, category) === false) {
     throw new Error(`Invalid category: ${category}`)
@@ -29,7 +29,7 @@ async function getLodestoneNews(
     throw new Error(`Invalid page: ${page}`)
   }
 
-  const ctx: Context = { locale, category, page, referer: '' }
+  const ctx: Context = { region, category, page, referer: '' }
   const rule = config.rules[category]
   const url = typeof rule.url === 'function' ? rule.url(ctx) : rule.url
   ctx.referer = url

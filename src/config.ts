@@ -24,7 +24,7 @@ const baseRule: Pick<Rule, 'rootNode' | 'page' | 'items'> = {
       .find('ul.btn__pager > li.btn__pager__current')
       .first()
       .text()
-    const m = i18n.pager[context.locale].exec(pager)
+    const m = i18n.pager[context.region].exec(pager)
     return {
       current: parseInt(m?.[1] ?? '0', 10),
       total: parseInt(m?.[2] ?? '0', 10),
@@ -59,8 +59,8 @@ const config: Config = {
   rules: {
     topics: {
       ...baseRule,
-      url: ({ locale, page }) =>
-        `https://${locale}.finalfantasyxiv.com/lodestone/topics/?page=${page}`,
+      url: ({ region, page }) =>
+        `https://${region}.finalfantasyxiv.com/lodestone/topics/?page=${page}`,
       items(el, $, context) {
         const items = el.find('li.news__list--topics')
         return items
@@ -91,23 +91,23 @@ const config: Config = {
     },
     notices: {
       ...baseRule,
-      url: ({ locale, page }) =>
-        `https://${locale}.finalfantasyxiv.com/lodestone/news/category/1?page=${page}`,
+      url: ({ region, page }) =>
+        `https://${region}.finalfantasyxiv.com/lodestone/news/category/1?page=${page}`,
     },
     maintenance: {
       ...baseRule,
-      url: ({ locale, page }) =>
-        `https://${locale}.finalfantasyxiv.com/lodestone/news/category/2?page=${page}`,
+      url: ({ region, page }) =>
+        `https://${region}.finalfantasyxiv.com/lodestone/news/category/2?page=${page}`,
     },
     updates: {
       ...baseRule,
-      url: ({ locale, page }) =>
-        `https://${locale}.finalfantasyxiv.com/lodestone/news/category/3?page=${page}`,
+      url: ({ region, page }) =>
+        `https://${region}.finalfantasyxiv.com/lodestone/news/category/3?page=${page}`,
     },
     status: {
       ...baseRule,
-      url: ({ locale, page }) =>
-        `https://${locale}.finalfantasyxiv.com/lodestone/news/category/4?page=${page}`,
+      url: ({ region, page }) =>
+        `https://${region}.finalfantasyxiv.com/lodestone/news/category/4?page=${page}`,
     },
   },
 }
