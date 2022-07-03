@@ -13,10 +13,10 @@ export interface Context {
   referer: string
 }
 
-export async function getLodestoneNews(meta: {
-  region: Region
-  category: string
-  count: number
+export async function getLodestoneNews(option: {
+  region?: Region
+  category?: string
+  count?: number
 }): Promise<News[]> {
   const { region = 'jp', category = 'topics', count = 5 } = meta
   const ret = []
