@@ -1,14 +1,32 @@
+import https from 'https'
+import http from 'http'
 import { URL } from 'url'
 
-export function fixUrl(url: string, rootUrl: string) {
-  if (url.startsWith('http')) {
-    return url
+export function makeUrl(href: string, pageUrl: string) {
+  if (href.startsWith('http')) {
+    return href
   }
-  const root = new URL(rootUrl)
-  if (url.startsWith('/')) {
-    return `${root.origin}${url}`
+  const root = new URL(pageUrl)
+  if (href.startsWith('/')) {
+    return `${root.origin}${href}`
   } else {
-    root.pathname += `/${url}`
+    root.pathname += `/${href}`
     return root.toString()
   }
+}
+
+export async function getUrl(url: string) {
+  return new Promise<string>((resolve, reject) => {
+    ;(url.startsWith('https://') ? https : http).get(url, (res) => {
+      let data = ''
+      res.setEncoding('utf8')
+      res.on('error', reject)
+      res.on('data', (chunk) => {
+        data += chunk as string
+      })
+      res.on('end', () => {
+        resolve(data)
+      })
+    })
+  })
 }
