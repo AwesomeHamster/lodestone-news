@@ -18,7 +18,7 @@ export async function getLodestoneNews(option: {
   category?: string
   count?: number
 }): Promise<News[]> {
-  const { region = 'jp', category = 'topics', count = 5 } = meta
+  const { region = 'jp', category = 'topics', count = 5 } = option
   const ret = []
   let curPage = 1
   while (ret.length < count) {
