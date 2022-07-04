@@ -1,3 +1,4 @@
+import https from 'https'
 import { expect } from 'chai'
 import getNews, { regions } from '../src'
 
@@ -22,5 +23,17 @@ describe('lodestone-news', () => {
         },
       )
     })
+  })
+
+  it('should accept agent', async () => {
+    const agent = new https.Agent({ keepAlive: true })
+    const news = await getNews({
+      region: 'jp',
+      category: 'topics',
+      count: 20,
+      request: { agent },
+    })
+    expect(news).is.an('array')
+    expect(news).has.length.which.is.greaterThan(0)
   })
 })
