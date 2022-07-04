@@ -1,5 +1,5 @@
 import { load } from 'cheerio'
-import config, { News, Page } from './config'
+import config, { News, NewsList, Page } from './config'
 import { getUrl } from './utils'
 export { News, Page }
 
@@ -18,14 +18,14 @@ export async function getLodestoneNews(option: {
   category?: string
   count?: number
 }): Promise<News[]> {
-  const { region = 'jp', category = 'topics', count = 5 } = option
+  const { region = 'jp', category = 'topics', count = -1 } = option
   const ret = []
   let curPage = 1
   while (ret.length < count) {
-    const { news, page } = await getNewsPage(region, category, curPage)
+    const news = await getNewsPage(region, category, curPage)
     ret.push(...news)
-    curPage = page.current + 1
-    if (curPage > page.total) {
+    curPage = news.current + 1
+    if (curPage > news.total) {
       break
     }
   }
@@ -37,7 +37,7 @@ export async function getNewsPage(
   region: Region,
   category: string,
   page: number,
-): Promise<{ news: News[]; page: Page }> {
+): Promise<NewsList> {
   if (regions.includes(region) === false) {
     throw new Error(`Invalid locale: ${region}`)
   }
@@ -58,5 +58,9 @@ export async function getNewsPage(
   const rootNode = rule.rootNode($, ctx)
   const pager = rule.page(rootNode, $, ctx)
   const items = rule.items(rootNode, $, ctx)
-  return { news: items, page: pager }
+
+  const news = items as NewsList
+  news.current = pager.current
+  news.total = pager.total
+  return news
 }

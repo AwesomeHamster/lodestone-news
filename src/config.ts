@@ -136,3 +136,5 @@ export interface Page {
   current: number
   total: number
 }
+
+export interface NewsList extends Array<News>, Page {}
