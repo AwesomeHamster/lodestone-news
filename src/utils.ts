@@ -17,10 +17,7 @@ export function makeUrl(href: string, pageUrl: string) {
 
 export async function getUrl(url: string, options?: https.RequestOptions) {
   return new Promise<string>((resolve, reject) => {
-    ;(url.startsWith('https://') ? https : http).get({
-      ...new URL(url),
-      ...options,
-    }, (res) => {
+    ;(url.startsWith('https://') ? https : http).get(url, { ...options }, (res) => {
       let data = ''
       res.setEncoding('utf8')
       res.on('error', reject)
