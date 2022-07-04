@@ -30,4 +30,5 @@ describe('lodestone-news', () => {
       expect(news).has.length.which.is.greaterThan(0)
     }).timeout(0)
   })
+
 })
