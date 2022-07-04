@@ -35,5 +35,5 @@ describe('lodestone-news', () => {
     })
     expect(news).is.an('array')
     expect(news).has.length.which.is.greaterThan(0)
-  })
+  }).timeout(0)
 })
