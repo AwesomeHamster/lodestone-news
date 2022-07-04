@@ -15,22 +15,18 @@ export function makeUrl(href: string, pageUrl: string) {
   }
 }
 
-export async function getUrl(url: string, options?: https.RequestOptions) {
+export async function getUrl(url: string) {
   return new Promise<string>((resolve, reject) => {
-    ;(url.startsWith('https://') ? https : http).get(
-      url,
-      { ...options },
-      (res) => {
-        let data = ''
-        res.setEncoding('utf8')
-        res.on('error', reject)
-        res.on('data', (chunk) => {
-          data += chunk as string
-        })
-        res.on('end', () => {
-          resolve(data)
-        })
-      },
-    )
+    ;(url.startsWith('https://') ? https : http).get(url, (res) => {
+      let data = ''
+      res.setEncoding('utf8')
+      res.on('error', reject)
+      res.on('data', (chunk) => {
+        data += chunk as string
+      })
+      res.on('end', () => {
+        resolve(data)
+      })
+    })
   })
 }
