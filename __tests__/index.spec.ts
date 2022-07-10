@@ -1,6 +1,6 @@
 import https from 'https'
 import { expect } from 'chai'
-import getNews, { regions } from '../src'
+import getNews, { defaultRules, LodestoneNews, regions } from '../src'
 
 describe('lodestone-news', () => {
   regions.forEach((region) => {
@@ -35,5 +35,22 @@ describe('lodestone-news', () => {
     })
     expect(news).is.an('array')
     expect(news).has.length.which.is.greaterThan(0)
+  })
+
+  it('should accept custom config', async () => {
+    const lodestone = new LodestoneNews({
+      region: 'na',
+      count: 10,
+      rules: {
+        custom: defaultRules.topics,
+      },
+    })
+    const news = await lodestone.getNews({ category: 'custom' })
+    expect(news).is.an('array')
+    expect(news.length).equals(10)
+    expect(news[0]).has.property('title').which.is.a('string')
+    expect(news[0]).has.property('epoch').which.is.a('number')
+    expect(news[0]).has.property('url').which.is.a('string')
+    expect(news[0]).has.property('date').which.is.a('date')
   })
 })

@@ -1,5 +1,5 @@
 import { Cheerio, CheerioAPI, Element } from 'cheerio'
-import { Context } from '.'
+import { Context, Region } from './news'
 import { makeUrl } from './utils'
 
 const i18n = {
@@ -55,66 +55,70 @@ const baseRule: Pick<Rule, 'rootNode' | 'page' | 'items'> = {
   },
 }
 
-const config: Config = {
-  rules: {
-    topics: {
-      ...baseRule,
-      url: ({ region, page }) =>
-        `https://${region}.finalfantasyxiv.com/lodestone/topics/?page=${page}`,
-      items(el, $, context) {
-        const items = el.find('li.news__list--topics')
-        return items
-          .map((i, el) => {
-            const $header = $(el).find('header.news__list--header')
-            const $title = $($header).find('p.news__list--title > a')
+export const defaultRules: Record<string, Rule> = {
+  topics: {
+    ...baseRule,
+    url: ({ region, page }) =>
+      `https://${region}.finalfantasyxiv.com/lodestone/topics/?page=${page}`,
+    items(el, $, context) {
+      const items = el.find('li.news__list--topics')
+      return items
+        .map((i, el) => {
+          const $header = $(el).find('header.news__list--header')
+          const $title = $($header).find('p.news__list--title > a')
 
-            const title = $title.text()
-            const url = $title.attr('href')!
+          const title = $title.text()
+          const url = $title.attr('href')!
 
-            const $timeScript = $($header)
-              .find('time.news__list--time > script')
-              .text()
-            const time = $timeScript.match(
-              /ldst_strftime\((\d+), 'YMD'\);/,
-            )?.[1]!
-            const epoch = parseInt(time, 10)
+          const $timeScript = $($header)
+            .find('time.news__list--time > script')
+            .text()
+          const time = $timeScript.match(/ldst_strftime\((\d+), 'YMD'\);/)?.[1]!
+          const epoch = parseInt(time, 10)
 
-            return {
-              title,
-              epoch,
-              date: new Date(epoch * 1000),
-              url: makeUrl(url, context.referer),
-            }
-          })
-          .toArray()
-      },
-    },
-    notices: {
-      ...baseRule,
-      url: ({ region, page }) =>
-        `https://${region}.finalfantasyxiv.com/lodestone/news/category/1?page=${page}`,
-    },
-    maintenance: {
-      ...baseRule,
-      url: ({ region, page }) =>
-        `https://${region}.finalfantasyxiv.com/lodestone/news/category/2?page=${page}`,
-    },
-    updates: {
-      ...baseRule,
-      url: ({ region, page }) =>
-        `https://${region}.finalfantasyxiv.com/lodestone/news/category/3?page=${page}`,
-    },
-    status: {
-      ...baseRule,
-      url: ({ region, page }) =>
-        `https://${region}.finalfantasyxiv.com/lodestone/news/category/4?page=${page}`,
+          return {
+            title,
+            epoch,
+            date: new Date(epoch * 1000),
+            url: makeUrl(url, context.referer),
+          }
+        })
+        .toArray()
     },
   },
+  notices: {
+    ...baseRule,
+    url: ({ region, page }) =>
+      `https://${region}.finalfantasyxiv.com/lodestone/news/category/1?page=${page}`,
+  },
+  maintenance: {
+    ...baseRule,
+    url: ({ region, page }) =>
+      `https://${region}.finalfantasyxiv.com/lodestone/news/category/2?page=${page}`,
+  },
+  updates: {
+    ...baseRule,
+    url: ({ region, page }) =>
+      `https://${region}.finalfantasyxiv.com/lodestone/news/category/3?page=${page}`,
+  },
+  status: {
+    ...baseRule,
+    url: ({ region, page }) =>
+      `https://${region}.finalfantasyxiv.com/lodestone/news/category/4?page=${page}`,
+  },
+}
+
+const config: Config = {
+  region: 'jp',
+  count: 5,
+  rules: defaultRules,
 }
 
 export default config
 
 export interface Config {
+  region: Region
+  count: number
   rules: Record<string, Rule>
 }
 
