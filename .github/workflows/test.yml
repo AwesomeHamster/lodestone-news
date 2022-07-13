@@ -7,3 +7,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: AwesomeHamster/actions-test@master
+        with:
+          test: yarn lint && yarn test
