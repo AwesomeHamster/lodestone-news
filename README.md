@@ -4,21 +4,45 @@ FFXIV Lodestone news crawler
 
 ## Install
 
+Use your favourite package manager to install it!
+
 ```bash
-npm i lodestone-news
 yarn add lodestone-news
+npm install lodestone-news
 ```
 
 ## Usage
 
-```js
-const getLodestoneNews = require('lodestone-news')
+```ts
+import { getNews } from 'lodestone-news'
+// Or use CommonJS style
+const { getNews } = require('lodestone-news')
 
-// getLodestoneNews is an async function, it is required to use
+// getNews is an async function, it is required to use
 // async/await keyword, or use Promise.then to grab the result.
-const newsList = getLodestoneNews({
-  region: 'jp', // 'na', 'eu', 'fr', 'de' or 'jp'
+const newsList = await getNews({
+  region: 'na', // region could be 'na', 'eu', 'fr', 'de' or 'jp'
   category: 'topics', // 'topics', 'notices', 'maintenance', 'updates' or 'status'
-  count: 10, // grab 10 news content at maximum
+  count: 3, // grab 3 news content (at maximum)
 })
+
+for (const news of newsList) {
+  console.log(news.title)
+  console.log(news.url)
+}
+// ->
+// Watch the Latest Episode of Duty Commenced
+// https://na.finalfantasyxiv.com/lodestone/topics/detail/baea1f118c1c739080e40e24e0a94903cf46b077
+// Crystalline Conflict Season One Results Revealed as Season Two Commences!
+// https://na.finalfantasyxiv.com/lodestone/topics/detail/9a21681153ac2a9e70de773f6e21cc0547759376
+// Patch 6.18 Notes
+// https://na.finalfantasyxiv.com/lodestone/topics/detail/aa641701b181ebf66aaf3264896b65acdbd23850
 ```
+
+## Advanced
+
+TODO
+
+## License
+
+This package is licensed under the MIT license.
