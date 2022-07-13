@@ -11,6 +11,12 @@
     "scraper"
   ],
   "main": "dist/index.bundle.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.bundle.js",
+      "import": "./dist/index.esm.js"
+    }
+  },
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
@@ -18,8 +24,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "constructeur build && tsc --emitDeclarationOnly",
-    "dev": "constructeur build --minify false && tsc --emitDeclarationOnly",
+    "build": "constructeur build --hybrid && tsc --emitDeclarationOnly",
+    "dev": "constructeur build --hybrid --minify false && tsc --emitDeclarationOnly",
     "test": "mocha -r ts-node/register --extension .spec.ts ./__tests__",
     "lint": "eslint src/**/*.ts"
   },
