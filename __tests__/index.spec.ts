@@ -1,7 +1,6 @@
 import https from 'https'
 import { expect } from 'chai'
 import getNews, { defaultRules, LodestoneNews, regions } from '../src'
-
 describe('lodestone-news', () => {
   regions.forEach((region) => {
     describe(`Locale: ${region}`, () => {

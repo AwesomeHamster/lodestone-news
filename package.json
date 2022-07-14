@@ -10,7 +10,8 @@
     "crawler",
     "scraper"
   ],
-  "main": "dist/index.bundle.js",
+  "type": "module",
+  "main": "dist/index.esm.js",
   "exports": {
     ".": {
       "require": "./dist/index.bundle.js",
@@ -26,7 +27,7 @@
   "scripts": {
     "build": "constructeur build --hybrid && tsc --emitDeclarationOnly",
     "dev": "constructeur build --hybrid --minify false && tsc --emitDeclarationOnly",
-    "test": "mocha -r ts-node/register --extension .spec.ts ./__tests__",
+    "test": "mocha ./__tests__",
     "lint": "eslint src/**/*.ts"
   },
   "author": {
