@@ -25,8 +25,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "constructeur build --hybrid && tsc --emitDeclarationOnly",
-    "dev": "constructeur build --hybrid --minify false && tsc --emitDeclarationOnly",
+    "build": "constructeur build constructeur.config.cjs && tsc --emitDeclarationOnly",
+    "dev": "constructeur dev constructeur.config.cjs && tsc --emitDeclarationOnly",
     "test": "mocha ./__tests__",
     "lint": "eslint src/**/*.ts"
   },
@@ -48,8 +48,8 @@
   "prettier": "@hamster-bot/prettier-config",
   "devDependencies": {
     "@hamster-bot/constructeur": "*",
-    "@hamster-bot/eslint-config": "^1.0.0",
-    "@hamster-bot/prettier-config": "^1.0.0",
+    "@hamster-bot/eslint-config": "*",
+    "@hamster-bot/prettier-config": "*",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.0",
     "@types/node": "^18.0.0",
