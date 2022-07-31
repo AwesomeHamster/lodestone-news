@@ -52,3 +52,21 @@ it('should accept custom config', async () => {
   expect(news[0]).has.property('url').which.is.a('string')
   expect(news[0]).has.property('date').which.is.a('date')
 })
+
+it('filte date', async () => {
+  const news = await getNews({
+    region: 'na',
+    category: 'topics',
+    count: 100,
+    after: new Date(1656633600 * 1000),
+    before: new Date('2022-07-20'),
+  })
+  expect(news).is.an('array')
+  expect(news[0]).has.property('title').which.is.a('string')
+  expect(news[0]).has.property('epoch').which.is.a('number')
+  expect(news[0]).has.property('url').which.is.a('string')
+  expect(news[0]).has.property('date').which.is.a('date')
+  expect(news.length).is.lessThan(100)
+  expect(news[0].date).is.lessThan(new Date('2022-07-20'))
+  expect(news[news.length - 1].date).is.greaterThan(new Date(1656633600 * 1000))
+}).timeout(0)
