@@ -53,7 +53,7 @@ it('should accept custom config', async () => {
   expect(news[0]).has.property('date').which.is.a('date')
 })
 
-it('filte date', async () => {
+it('should filter by date', async () => {
   const news = await getNews({
     region: 'na',
     category: 'topics',
