@@ -24,8 +24,6 @@ export class LodestoneNews {
   protected region: Region
   protected count: number
   protected request?: RequestOptions
-  protected before?: Date
-  protected after?: Date
   constructor(config: Partial<Config> = {}) {
     this.rules = { ...defaultRules, ...config.rules }
     this.region = config.region ?? defaultConfig.region
@@ -45,8 +43,8 @@ export class LodestoneNews {
       category = 'topics',
       count = this.count,
       request = this.request ?? undefined,
-      before = this.before ?? undefined,
-      after = this.after ?? undefined,
+      before,
+      after,
     } = option
     const ret = []
     let curPage = 1
