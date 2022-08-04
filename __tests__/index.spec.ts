@@ -53,7 +53,7 @@ it('should accept custom config', async () => {
   expect(news[0]).has.property('date').which.is.a('date')
 })
 
-it('should filter by date', async () => {
+it('should filter by two dates', async () => {
   const news = await getNews({
     region: 'na',
     category: 'topics',
@@ -69,4 +69,37 @@ it('should filter by date', async () => {
   expect(news.length).is.equal(2)
   expect(news[0].date).is.lessThan(new Date('2022-07-20'))
   expect(news[news.length - 1].date).is.greaterThan(new Date(1658217599 * 1000))
+}).timeout(0)
+
+it('should filter by one date', async () => {
+  const lodestone = new LodestoneNews({
+    region: 'na',
+    count: 100,
+  })
+  const news = await lodestone.getNews({
+    category: 'topics',
+    after: new Date(1658217599 * 1000), // 2022-07-19 07:59:59 UTC+0
+  })
+  expect(news).is.an('array')
+  expect(news[0]).has.property('title').which.is.a('string')
+  expect(news[0]).has.property('epoch').which.is.a('number')
+  expect(news[0]).has.property('url').which.is.a('string')
+  expect(news[0]).has.property('date').which.is.a('date')
+  expect(news[news.length - 1].date).is.greaterThan(new Date(1658217599 * 1000))
+}).timeout(0)
+
+it('should not be filtered', async () => {
+  const lodestone = new LodestoneNews({
+    region: 'na',
+    count: 50,
+  })
+  const news = await lodestone.getNews({
+    category: 'topics',
+  })
+  expect(news).is.an('array')
+  expect(news[0]).has.property('title').which.is.a('string')
+  expect(news[0]).has.property('epoch').which.is.a('number')
+  expect(news[0]).has.property('url').which.is.a('string')
+  expect(news[0]).has.property('date').which.is.a('date')
+  expect(news.length).is.equal(50)
 }).timeout(0)
