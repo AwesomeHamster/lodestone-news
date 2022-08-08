@@ -19,6 +19,9 @@ export function makeUrl(href: string, pageUrl: string) {
 export function filter(arr: News[], before?: Date, after?: Date): News[] {
   return arr.filter(({ date }) => {
     if (before && after) {
+      if (before < after) {
+        throw new Error(`Invalid filter: before is smaller than after! \n\tbefore:\t${before}\n\tafter:\t${after}`)
+      }
       if (date < before && date > after) return true
     } else if ((before && date < before) || (after && date > after)) return true
     return false
