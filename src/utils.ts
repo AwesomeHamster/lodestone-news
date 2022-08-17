@@ -2,6 +2,8 @@ import https from 'https'
 import http from 'http'
 import { URL } from 'url'
 
+import { News } from './config'
+
 export function makeUrl(href: string, pageUrl: string) {
   if (href.startsWith('http')) {
     return href
@@ -13,6 +15,18 @@ export function makeUrl(href: string, pageUrl: string) {
     root.pathname += `/${href}`
     return root.toString()
   }
+}
+
+export function filter(arr: News[], before?: Date, after?: Date): News[] {
+  return arr.filter(({ date }) => {
+    if (before && after) {
+      if (before < after) {
+        throw new Error(`\`before\`(${before}) should not be less than \`after\`(${after}).`)
+      }
+      if (date < before && date > after) return true
+    } else if ((before && date < before) || (after && date > after)) return true
+    return false
+  })
 }
 
 export async function getUrl(url: string, options?: https.RequestOptions) {

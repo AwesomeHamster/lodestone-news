@@ -7,7 +7,7 @@ import defaultConfig, {
   NewsList,
   Rule,
 } from './config'
-import { getUrl } from './utils'
+import { filter, getUrl } from './utils'
 
 export const regions = ['na', 'eu', 'fr', 'de', 'jp'] as const
 export type Region = typeof regions[number]
@@ -24,7 +24,6 @@ export class LodestoneNews {
   protected region: Region
   protected count: number
   protected request?: RequestOptions
-
   constructor(config: Partial<Config> = {}) {
     this.rules = { ...defaultRules, ...config.rules }
     this.region = config.region ?? defaultConfig.region
@@ -36,12 +35,16 @@ export class LodestoneNews {
     category?: string
     count?: number
     request?: RequestOptions
+    before?: Date
+    after?: Date
   }): Promise<News[]> {
     const {
       region = this.region,
       category = 'topics',
       count = this.count,
       request = this.request ?? undefined,
+      before,
+      after,
     } = option
     const ret = []
     let curPage = 1
@@ -52,9 +55,10 @@ export class LodestoneNews {
         page: curPage,
         request,
       })
-      ret.push(...news)
+      const arr = before || after ? filter(news, before, after) : news
+      ret.push(...arr)
       curPage = news.current + 1
-      if (curPage > news.total) {
+      if (curPage > news.total || arr.length === 0) {
         break
       }
     }
