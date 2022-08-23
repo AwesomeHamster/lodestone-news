@@ -1,5 +1,5 @@
-import https from 'https'
 import http from 'http'
+import https from 'https'
 import { URL } from 'url'
 
 export function makeUrl(href: string, pageUrl: string) {

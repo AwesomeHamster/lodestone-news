@@ -1,5 +1,7 @@
-import { load } from 'cheerio'
 import { RequestOptions } from 'https'
+
+import { load } from 'cheerio'
+
 import defaultConfig, {
   Config,
   defaultRules,
