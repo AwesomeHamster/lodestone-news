@@ -62,6 +62,7 @@
     "cross-env": "^7.0.3",
     "esbuild": "^0.15.5",
     "esbuild-plugin-yaml": "^0.0.1",
+    "esbuild-register": "^3.3.3",
     "eslint": "^8.22.0",
     "eslint-import-resolver-typescript": "^3.5.0",
     "fast-glob": "^3.2.11",
