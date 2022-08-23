@@ -12,4 +12,6 @@ jobs:
       - uses: AwesomeHamster/actions-test@master
         with:
           node-version: ${{ matrix.node-version }}
-          test: yarn lint && yarn test
+          test: yarn lint && yarn test:lcov
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
