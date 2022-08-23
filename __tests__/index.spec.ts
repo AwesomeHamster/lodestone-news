@@ -1,6 +1,8 @@
 import https from 'https'
+
 import { expect } from 'chai'
-import getNews, { defaultRules, LodestoneNews, regions } from '../src'
+
+import { defaultRules, getNews, LodestoneNews, regions } from '../src'
 
 const UTC_0_2022_07_19_07_59_59 = 1658217599 * 1000 // 2022-07-19 07:59:59 UTC+0
 
