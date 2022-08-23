@@ -1,5 +1,8 @@
 # lodestone-news
 
+[![Test](https://github.com/AwesomeHamster/lodestone-news/actions/workflows/test.yml/badge.svg)](https://github.com/AwesomeHamster/lodestone-news/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/AwesomeHamster/lodestone-news/branch/master/graph/badge.svg?token=9UVXLTPU78)](https://codecov.io/gh/AwesomeHamster/lodestone-news)
+
 FFXIV Lodestone news crawler
 
 ## Install
