@@ -62,7 +62,7 @@ it('should filter with after / before', async () => {
     region: 'na',
     category: 'topics',
     count: 100,
-    after: new Date(UTC_0_2022_07_19_07_59_59), 
+    after: new Date(UTC_0_2022_07_19_07_59_59),
     before: new Date('2022-07-20'),
   })
   expect(news).is.an('array')
