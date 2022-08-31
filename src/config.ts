@@ -39,10 +39,16 @@ const baseRule: Pick<Rule, 'rootNode' | 'page' | 'items'> = {
         const $a = $(el).find('a')
 
         const title = $a.find('p.news__list--title').text()
-        const url = $a.prop('href')!
+        const url = $a.prop('href')
+        if (!url) {
+          throw new Error(`No URL found for "${title}" in ${context.referer}`)
+        }
 
         const $timeScript = $a.find('time.news__list--time > script').text()
-        const time = $timeScript.match(/ldst_strftime\((\d+), 'YMD'\);/)?.[1]!
+        const time = $timeScript.match(/ldst_strftime\((\d+), 'YMD'\);/)?.[1]
+        if (!time) {
+          throw new Error(`No create time found for "${title}" in ${context.referer}`)
+        }
         const epoch = parseInt(time, 10)
         return {
           title,
@@ -68,12 +74,18 @@ export const defaultRules: Record<string, Rule> = {
           const $title = $($header).find('p.news__list--title > a')
 
           const title = $title.text()
-          const url = $title.prop('href')!
+          const url = $title.prop('href')
+          if (!url) {
+            throw new Error(`No URL found for "${title}" in ${context.referer}`)
+          }
 
           const $timeScript = $($header)
             .find('time.news__list--time > script')
             .text()
-          const time = $timeScript.match(/ldst_strftime\((\d+), 'YMD'\);/)?.[1]!
+          const time = $timeScript.match(/ldst_strftime\((\d+), 'YMD'\);/)?.[1]
+          if (!time) {
+            throw new Error(`No create time found for "${title}" in ${context.referer}`)
+          }
           const epoch = parseInt(time, 10)
 
           return {
