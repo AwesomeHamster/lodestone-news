@@ -28,21 +28,21 @@ Assertion.overwriteChainableMethod('a', a, noop)
 Assertion.overwriteChainableMethod('an', a, noop)
 
 regions.forEach((region) => {
+  const categories = ['topics', 'notices', 'maintenance', 'updates', 'status']
+
   describe(`Locale: ${region}`, () => {
-    ;['topics', 'notices', 'maintenance', 'updates', 'status'].forEach(
-      (category) => {
-        it(`should fetch ${category}`, async () => {
-          const news = await getNews({
-            region,
-            category,
-            count: 20,
-          })
-          expect(news).is.an('array')
-          expect(news).has.length.greaterThan(0)
-          expect(news[0]).is.a('news')
-        }).timeout(0)
-      },
-    )
+    categories.forEach((category) => {
+      it(`should fetch ${category}`, async () => {
+        const news = await getNews({
+          region,
+          category,
+          count: 20,
+        })
+        expect(news).is.an('array')
+        expect(news).has.length.greaterThan(0)
+        expect(news[0]).is.a('news')
+      }).timeout(0)
+    })
   })
 })
 
