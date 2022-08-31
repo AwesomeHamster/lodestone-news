@@ -1,7 +1,6 @@
 import { Cheerio, CheerioAPI, Element } from 'cheerio'
 
 import { Context, Region } from './news'
-import { makeUrl } from './utils'
 
 const i18n = {
   pager: {
@@ -40,7 +39,7 @@ const baseRule: Pick<Rule, 'rootNode' | 'page' | 'items'> = {
         const $a = $(el).find('a')
 
         const title = $a.find('p.news__list--title').text()
-        const url = $a.attr('href')!
+        const url = $a.prop('href')!
 
         const $timeScript = $a.find('time.news__list--time > script').text()
         const time = $timeScript.match(/ldst_strftime\((\d+), 'YMD'\);/)?.[1]!
@@ -49,7 +48,7 @@ const baseRule: Pick<Rule, 'rootNode' | 'page' | 'items'> = {
           title,
           epoch,
           date: new Date(epoch * 1000),
-          url: makeUrl(url, context.referer),
+          url,
         }
       })
       .toArray()
@@ -69,7 +68,7 @@ export const defaultRules: Record<string, Rule> = {
           const $title = $($header).find('p.news__list--title > a')
 
           const title = $title.text()
-          const url = $title.attr('href')!
+          const url = $title.prop('href')!
 
           const $timeScript = $($header)
             .find('time.news__list--time > script')
@@ -81,7 +80,7 @@ export const defaultRules: Record<string, Rule> = {
             title,
             epoch,
             date: new Date(epoch * 1000),
-            url: makeUrl(url, context.referer),
+            url,
           }
         })
         .toArray()
