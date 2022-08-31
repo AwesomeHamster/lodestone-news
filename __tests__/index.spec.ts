@@ -59,8 +59,8 @@ it('should filter with after / before', async () => {
   const news = await getNews({
     region: 'na',
     category: 'topics',
-    count: 100,
-    after: new Date(UTC_0_2022_07_19_07_59_59), 
+    count: 10,
+    after: new Date(UTC_0_2022_07_19_07_59_59),
     before: new Date('2022-07-20'),
   })
   expect(news).is.an('array')
@@ -77,7 +77,7 @@ it('should filter with after', async () => {
   const news = await getNews({
     region: 'na',
     category: 'topics',
-    count: 100,
+    count: 10,
     after: new Date(UTC_0_2022_07_19_07_59_59),
   })
   expect(news).is.an('array')
@@ -86,4 +86,19 @@ it('should filter with after', async () => {
   expect(news[0]).has.property('url').which.is.a('string')
   expect(news[0]).has.property('date').which.is.a('date')
   expect(news[news.length - 1].date).is.greaterThan(new Date(UTC_0_2022_07_19_07_59_59))
+}).timeout(0)
+
+it('should filter with before', async () => {
+  const news = await getNews({
+    region: 'na',
+    category: 'topics',
+    count: 10,
+    before: new Date('2021-12-24'),
+  })
+  expect(news).is.an('array')
+  expect(news[0]).has.property('title').which.is.a('string')
+  expect(news[0]).has.property('epoch').which.is.a('number')
+  expect(news[0]).has.property('url').which.is.a('string')
+  expect(news[0]).has.property('date').which.is.a('date')
+  expect(news[0].date).is.greaterThan(new Date('2021-12-24'))
 }).timeout(0)
