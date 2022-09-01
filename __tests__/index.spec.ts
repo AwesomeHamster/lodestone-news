@@ -1,8 +1,19 @@
 import * as https from 'https'
 
-import { Assertion, expect, util } from 'chai'
+import { Assertion, expect, util, use } from 'chai'
+import chaiThings from 'chai-things'
 
 import { defaultRules, getNews, LodestoneNews, regions } from '../src'
+
+use(chaiThings)
+
+declare global {
+  namespace Chai {
+    interface Assertion {
+      all: Chai.ArrayAssertion
+    }
+  }
+}
 
 const UTC_0_2022_07_19_07_59_59 = 1658217599 * 1000 // 2022-07-19 07:59:59 UTC+0
 
@@ -29,12 +40,10 @@ Assertion.overwriteChainableMethod('an', a, noop)
 
 Assertion.addProperty('newsList', function () {
   new Assertion(this._obj).to.be.a('array')
-  this._obj.forEach(n => {
-    new Assertion(n).to.have.property('title').which.is.a('string')
-    new Assertion(n).to.have.property('epoch').which.is.a('number')
-    new Assertion(n).to.have.property('url').which.is.a('string')
-    new Assertion(n).to.have.property('date').which.is.a('date')
-  })
+  new Assertion(this._obj).all.have.property('title').which.is.a('string')
+  new Assertion(this._obj).all.have.property('epoch').which.is.a('number')
+  new Assertion(this._obj).all.have.property('url').which.is.a('string')
+  new Assertion(this._obj).all.have.property('date').which.is.a('date')
 })
 
 function length(_super: typeof Assertion) {
