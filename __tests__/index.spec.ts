@@ -7,7 +7,7 @@ import { defaultRules, getNews, LodestoneNews, regions } from '../src'
 const UTC_0_2022_07_19_07_59_59 = 1658217599 * 1000 // 2022-07-19 07:59:59 UTC+0
 
 const a = function (_super: typeof Assertion) {
-  return function (this: typeof Assertion, value: any, message?: string) {
+  return function (this: typeof Assertion, value: unknown, message?: string) {
     if (value === 'news') {
       new Assertion(this._obj).to.have.property('title').which.is.a('string')
       new Assertion(this._obj).to.have.property('url').which.is.a('string')
