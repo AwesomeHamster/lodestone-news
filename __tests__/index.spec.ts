@@ -1,6 +1,6 @@
 import * as https from 'https'
 
-import { Assertion, expect } from 'chai'
+import { Assertion, expect, util } from 'chai'
 
 import { defaultRules, getNews, LodestoneNews, regions } from '../src'
 
@@ -26,6 +26,40 @@ function noop() {
 
 Assertion.overwriteChainableMethod('a', a, noop)
 Assertion.overwriteChainableMethod('an', a, noop)
+
+Assertion.addProperty('newsList', function () {
+  new Assertion(this._obj).to.be.a('array')
+  this._obj.forEach(n => {
+    new Assertion(n).to.have.property('title').which.is.a('string')
+    new Assertion(n).to.have.property('epoch').which.is.a('number')
+    new Assertion(n).to.have.property('url').which.is.a('string')
+    new Assertion(n).to.have.property('date').which.is.a('date')
+  })
+})
+
+function length(_super: typeof Assertion) {
+  return function (this: typeof Assertion, n?: number, message?: string) {
+    if (util.flag(this, 'newsList')) {
+      new Assertion(this._obj).to.have.property('length').which.is.a('number')
+      if (n) {
+        new Assertion(this._obj).to.have.length(n, message)
+      } else {
+        new Assertion(this._obj).to.have.length.greaterThan(0, message)
+      }
+    } else {
+      _super.apply(this, [n, message])
+    }
+  }
+}
+
+function assertLength() {
+  return function () {
+    util.flag(this, 'doLength', true)
+  }
+}
+
+Assertion.overwriteChainableMethod('length', length, assertLength)
+Assertion.overwriteChainableMethod('lengthOf', length, assertLength)
 
 regions.forEach((region) => {
   const categories = ['topics', 'notices', 'maintenance', 'updates', 'status']
