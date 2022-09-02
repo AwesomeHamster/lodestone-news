@@ -40,7 +40,7 @@ declare global {
 
 Assertion.addProperty('newsList', function () {
   new Assertion(this._obj).to.be.a('array')
-  new Assertion(this._obj).should.each.to.be.a('news')
+  new Assertion(this._obj).each.to.be.a('news')
   util.flag(this, 'newsList', true)
 })
 
