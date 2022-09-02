@@ -31,7 +31,7 @@
     "test:text": "nyc --reporter=text mocha ./__tests__",
     "test:html": "nyc --reporter=html mocha ./__tests__",
     "test:lcov": "nyc --reporter=lcov mocha ./__tests__",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts __tests__/**/*.ts"
   },
   "author": {
     "name": "Maiko Tan",
@@ -67,7 +67,7 @@
     "eslint-import-resolver-typescript": "^3.5.0",
     "fast-glob": "^3.2.11",
     "js-yaml": "^4.1.0",
-    "mocha": "^9.2.0",
+    "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "prettier": "^2.7.1",
     "source-map-support": "^0.5.21",

@@ -60,7 +60,7 @@ export class LodestoneNews {
       const arr = before || after ? filter(news, before, after) : news
       ret.push(...arr)
       curPage = news.current + 1
-      if (curPage > news.total || arr.length === 0) {
+      if (curPage > news.total || (arr.length === 0 && ret.length !== 0)) {
         break
       }
     }
