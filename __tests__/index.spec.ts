@@ -44,6 +44,7 @@ Assertion.addProperty('newsList', function () {
   new Assertion(this._obj).all.have.property('epoch').which.is.a('number')
   new Assertion(this._obj).all.have.property('url').which.is.a('string')
   new Assertion(this._obj).all.have.property('date').which.is.a('date')
+  util.flag(this, 'newsList', true)
 })
 
 function length(_super: typeof Assertion) {
@@ -55,6 +56,7 @@ function length(_super: typeof Assertion) {
       } else {
         new Assertion(this._obj).to.have.length.greaterThan(0, message)
       }
+      util.flag(this, 'newsList', false)
     } else {
       _super.apply(this, [n, message])
     }
