@@ -99,7 +99,7 @@ it('should accept custom config', async () => {
     },
   })
   const news = await lodestone.getNews({ category: 'custom' })
-  expect(news).to.be.newsList.which.has.length(20)
+  expect(news).to.be.newsList.which.has.length(10)
 })
 
 it('should filter with after / before', async () => {
