@@ -61,22 +61,22 @@ Assertion.addProperty('newsList', function () {
   util.flag(this, 'newsList', true)
 })
 
-// regions.forEach((region) => {
-//   const categories = ['topics', 'notices', 'maintenance', 'updates', 'status']
+regions.forEach((region) => {
+  const categories = ['topics', 'notices', 'maintenance', 'updates', 'status']
 
-//   describe(`Locale: ${region}`, () => {
-//     categories.forEach((category) => {
-//       it(`should fetch ${category}`, async () => {
-//         const news = await getNews({
-//           region,
-//           category,
-//           count: 20,
-//         })
-//         expect(news).to.be.newsList.which.has.length.greaterThan(0)
-//       }).timeout(0)
-//     })
-//   })
-// })
+  describe(`Locale: ${region}`, () => {
+    categories.forEach((category) => {
+      it(`should fetch ${category}`, async () => {
+        const news = await getNews({
+          region,
+          category,
+          count: 20,
+        })
+        expect(news).to.be.newsList.which.has.length.greaterThan(0)
+      }).timeout(0)
+    })
+  })
+})
 
 it('should accept agent', async () => {
   const agent = new https.Agent({ keepAlive: true })
