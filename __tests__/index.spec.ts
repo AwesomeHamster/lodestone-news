@@ -1,19 +1,11 @@
 import * as https from 'https'
 
 import { Assertion, expect, util, use } from 'chai'
-import chaiThings from 'chai-things'
+import chaiEach from 'chai-each'
 
 import { defaultRules, getNews, LodestoneNews, regions } from '../src'
 
-use(chaiThings)
-
-declare global {
-  namespace Chai {
-    interface Assertion {
-      all: Chai.ArrayAssertion
-    }
-  }
-}
+use(chaiEach)
 
 const UTC_0_2022_07_19_07_59_59 = 1658217599 * 1000 // 2022-07-19 07:59:59 UTC+0
 
@@ -23,7 +15,7 @@ const a = function (_super: typeof Assertion) {
       new Assertion(this._obj).to.have.property('title').which.is.a('string')
       new Assertion(this._obj).to.have.property('url').which.is.a('string')
       new Assertion(this._obj).to.have.property('epoch').which.is.a('number')
-      new Assertion(this._obj).has.property('date').which.is.a('date')
+      new Assertion(this._obj).to.have.property('date').which.is.a('date')
     } else {
       _super.apply(this, [value, message])
     }
@@ -40,10 +32,10 @@ Assertion.overwriteChainableMethod('an', a, noop)
 
 Assertion.addProperty('newsList', function () {
   new Assertion(this._obj).to.be.a('array')
-  new Assertion(this._obj).all.have.property('title').which.is.a('string')
-  new Assertion(this._obj).all.have.property('epoch').which.is.a('number')
-  new Assertion(this._obj).all.have.property('url').which.is.a('string')
-  new Assertion(this._obj).all.have.property('date').which.is.a('date')
+  new Assertion(this._obj).should.each.have.property('title').which.is.a('string')
+  new Assertion(this._obj).should.each.have.property('epoch').which.is.a('number')
+  new Assertion(this._obj).should.each.have.property('url').which.is.a('string')
+  new Assertion(this._obj).should.each.have.property('date').which.is.a('date')
   util.flag(this, 'newsList', true)
 })
 
