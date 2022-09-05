@@ -1,30 +1,80 @@
 import * as https from 'https'
 
-import { expect } from 'chai'
+import { Assertion, expect, util, use } from 'chai'
+import chaiEach from 'chai-each'
 
 import { defaultRules, getNews, LodestoneNews, regions } from '../src'
 
+use(chaiEach)
+
 const UTC_0_2022_07_19_07_59_59 = 1658217599 * 1000 // 2022-07-19 07:59:59 UTC+0
 
+const a = function (_super: typeof Assertion) {
+  function assertNews(this: typeof Assertion) {
+    new Assertion(this._obj).to.have.property('title').which.is.a('string')
+    new Assertion(this._obj).to.have.property('url').which.is.a('string')
+    new Assertion(this._obj).to.have.property('epoch').which.is.a('number')
+    new Assertion(this._obj).to.have.property('date').which.is.a('date')
+  }
+  return function (this: typeof Assertion, value: unknown, message?: string) {
+    if (value === 'news') {
+      if (util.flag(this, 'each')) {
+        const each = util.flag(this, 'each')
+        util.flag(this, 'each', each - 1)
+
+        new Assertion(this._obj).is.an.instanceOf(Array)
+        this._obj.map(item => {
+          const that = Object.create(this)
+          util.transferFlags(that, this, false)
+          util.flag(that, 'object', item)
+          assertNews.apply(this, [value, message])
+          return util.flag(that, 'object')
+        })
+      } else {
+        assertNews.apply(this, [value, message])
+      }
+    } else {
+      _super.apply(this, [value, message])
+    }
+  }
+}
+
+function noop() {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  return function () { }
+}
+
+Assertion.overwriteChainableMethod('a', a, noop)
+Assertion.overwriteChainableMethod('an', a, noop)
+
+declare global {
+  namespace Chai {
+    interface Assertion {
+      newsList: Assertion
+    }
+  }
+}
+
+Assertion.addProperty('newsList', function () {
+  new Assertion(this._obj).to.be.a('array')
+  new Assertion(this._obj).each.to.be.a('news')
+  util.flag(this, 'newsList', true)
+})
+
 regions.forEach((region) => {
+  const categories = ['topics', 'notices', 'maintenance', 'updates', 'status']
+
   describe(`Locale: ${region}`, () => {
-    ;['topics', 'notices', 'maintenance', 'updates', 'status'].forEach(
-      (category) => {
-        it(`should fetch ${category}`, async () => {
-          const news = await getNews({
-            region,
-            category,
-            count: 20,
-          })
-          expect(news).is.an('array')
-          expect(news).has.length.greaterThan(0)
-          expect(news[0]).has.property('title').which.is.a('string')
-          expect(news[0]).has.property('epoch').which.is.a('number')
-          expect(news[0]).has.property('url').which.is.a('string')
-          expect(news[0]).has.property('date').which.is.a('date')
-        }).timeout(0)
-      },
-    )
+    categories.forEach((category) => {
+      it(`should fetch ${category}`, async () => {
+        const news = await getNews({
+          region,
+          category,
+          count: 20,
+        })
+        expect(news).to.be.newsList.which.has.length.greaterThan(0)
+      }).timeout(0)
+    })
   })
 })
 
@@ -36,8 +86,8 @@ it('should accept agent', async () => {
     count: 20,
     request: { agent },
   })
-  expect(news).is.an('array')
-  expect(news).has.length.which.is.greaterThan(0)
+  expect(news).to.be.an('array')
+  expect(news).to.have.length(20)
 })
 
 it('should accept custom config', async () => {
@@ -49,12 +99,7 @@ it('should accept custom config', async () => {
     },
   })
   const news = await lodestone.getNews({ category: 'custom' })
-  expect(news).is.an('array')
-  expect(news.length).equals(10)
-  expect(news[0]).has.property('title').which.is.a('string')
-  expect(news[0]).has.property('epoch').which.is.a('number')
-  expect(news[0]).has.property('url').which.is.a('string')
-  expect(news[0]).has.property('date').which.is.a('date')
+  expect(news).to.be.newsList.which.has.length(10)
 })
 
 it('should filter with after / before', async () => {
@@ -65,14 +110,9 @@ it('should filter with after / before', async () => {
     after: new Date(UTC_0_2022_07_19_07_59_59),
     before: new Date('2022-07-20'),
   })
-  expect(news).is.an('array')
-  expect(news[0]).has.property('title').which.is.a('string')
-  expect(news[0]).has.property('epoch').which.is.a('number')
-  expect(news[0]).has.property('url').which.is.a('string')
-  expect(news[0]).has.property('date').which.is.a('date')
-  expect(news.length).is.equal(2)
-  expect(news[0].date).is.lessThan(new Date('2022-07-20'))
-  expect(news[news.length - 1].date).is.greaterThan(new Date(UTC_0_2022_07_19_07_59_59))
+  expect(news).to.be.newsList.which.has.length.greaterThan(0)
+  expect(news).to.each.have.property('date').which.is.lessThan(new Date('2022-07-20'))
+  expect(news).to.each.have.property('date').which.is.greaterThan(new Date(UTC_0_2022_07_19_07_59_59))
 }).timeout(0)
 
 it('should filter with after', async () => {
@@ -82,12 +122,8 @@ it('should filter with after', async () => {
     count: 100,
     after: new Date(UTC_0_2022_07_19_07_59_59),
   })
-  expect(news).is.an('array')
-  expect(news[0]).has.property('title').which.is.a('string')
-  expect(news[0]).has.property('epoch').which.is.a('number')
-  expect(news[0]).has.property('url').which.is.a('string')
-  expect(news[0]).has.property('date').which.is.a('date')
-  expect(news[news.length - 1].date).is.greaterThan(new Date(UTC_0_2022_07_19_07_59_59))
+  expect(news).to.be.newsList.which.has.length.greaterThan(0)
+  expect(news).to.each.have.property('date').which.is.greaterThan(new Date(UTC_0_2022_07_19_07_59_59))
 }).timeout(0)
 
 it('should filter with before', async () => {
@@ -97,10 +133,6 @@ it('should filter with before', async () => {
     count: 100,
     before: new Date('2020-12-24'),
   })
-  expect(news).is.an('array')
-  expect(news[0]).has.property('title').which.is.a('string')
-  expect(news[0]).has.property('epoch').which.is.a('number')
-  expect(news[0]).has.property('url').which.is.a('string')
-  expect(news[0]).has.property('date').which.is.a('date')
-  expect(news[0].date).is.lessThan(new Date('2020-12-24'))
+  expect(news).is.newsList.which.has.length.greaterThan(0)
+  expect(news).to.each.have.property('date').which.is.lessThan(new Date('2020-12-24'))
 }).timeout(0)

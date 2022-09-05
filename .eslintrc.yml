@@ -1,2 +1,5 @@
 extends:
   - '@hamster-bot/eslint-config/typescript'
+
+rules:
+  '@typescript-eslint/no-namespace': off
