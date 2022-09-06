@@ -90,7 +90,7 @@ export class LodestoneNews {
     ctx.referer = url
 
     const resp = await getUrl(url, request)
-    const $ = load(resp)
+    const $ = load(resp, { baseURI: url })
     const rootNode = rule.rootNode($, ctx)
     const pager = rule.page(rootNode, $, ctx)
     const items = rule.items(rootNode, $, ctx)

@@ -1,21 +1,7 @@
 import http from 'http'
 import https from 'https'
-import { URL } from 'url'
 
 import { News } from './config'
-
-export function makeUrl(href: string, pageUrl: string) {
-  if (href.startsWith('http')) {
-    return href
-  }
-  const root = new URL(pageUrl)
-  if (href.startsWith('/')) {
-    return `${root.origin}${href}`
-  } else {
-    root.pathname += `/${href}`
-    return root.toString()
-  }
-}
 
 export function filter(arr: News[], before?: Date, after?: Date): News[] {
   return arr.filter(({ date }) => {
