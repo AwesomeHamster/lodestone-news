@@ -1,0 +1,6 @@
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: AwesomeHamster/actions-auto-approve
+        with:
+          github-token: ${{ secrets.HAMSTER_PAT }}
