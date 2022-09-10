@@ -1,0 +1,13 @@
+name: Auto approve
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: AwesomeHamster/actions-auto-approve
+        with:
+          github-token: ${{ secrets.HAMSTER_PAT }}
