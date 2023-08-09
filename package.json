@@ -10,23 +10,26 @@
     "crawler",
     "scraper"
   ],
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/esm/index.js"
+    "require": "./dist/index.cjs",
+    "import": "./dist/index.js",
+    "types": {
+      "require": "./dist/index.d.cts",
+      "import": "./dist/index.d.ts"
+    }
   },
-  "typings": "dist/types/index.d.ts",
+  "typings": "dist/index.d.ts",
   "files": [
     "dist",
     "LICENCE",
     "README.md"
   ],
   "scripts": {
-    "build": "yarn build:esbuild && yarn dtsc",
-    "dev": "cross-env NODE_ENV=development yarn build:esbuild && yarn dtsc",
-    "build:esbuild": "node -r esbuild-register ./scripts/build.ts",
-    "dtsc": "echo 'Building d.ts files' && tsc --emitDeclarationOnly",
+    "build": "yarn dev --minify",
+    "dev": "tsup src/index.ts --format cjs,esm --clean --sourcemap --dts",
     "test": "yarn test:text",
     "test:text": "nyc --reporter=text mocha ./__tests__",
     "test:html": "nyc --reporter=html mocha ./__tests__",
@@ -47,7 +50,7 @@
   "bugs": {
     "url": "https://github.com/AwesomeHamster/lodestone-news/issues"
   },
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.6.1",
   "prettier": "@hamster-bot/prettier-config",
   "devDependencies": {
     "@hamster-bot/eslint-config": "*",
@@ -61,7 +64,7 @@
     "chai": "^4.3.6",
     "chai-each": "^0.0.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.15.5",
+    "esbuild": "^0.18.20",
     "esbuild-plugin-yaml": "^0.0.1",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.22.0",
@@ -73,6 +76,7 @@
     "prettier": "^2.7.1",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.1",
+    "tsup": "^7.2.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
